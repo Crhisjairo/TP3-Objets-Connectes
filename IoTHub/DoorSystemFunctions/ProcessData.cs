@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace DoorSystemFunctions
 {
@@ -21,9 +24,23 @@ namespace DoorSystemFunctions
                 try
                 {
                     string messageBody = Encoding.UTF8.GetString(eventData.Body.Array, eventData.Body.Offset, eventData.Body.Count);
+                    JObject systemDoorData = JObject.Parse(messageBody);
 
                     // Replace these two lines with your processing logic.
                     log.LogInformation($"C# Event Hub trigger function processed a message: {messageBody}");
+                    
+                    SqlConnection con = new SqlConnection("Server=tcp:crhisjairo-iot-database-server.database.windows.net,1433;Initial Catalog=IoTDatabase;Persist Security Info=False;User ID=crhisjairo;Password=Cores2001;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                    con.Open();
+
+                    log.LogInformation(systemDoorData["DeviceId"].ToString());
+                    log.LogInformation(systemDoorData["Temperature"].ToString());
+
+
+                    String query = $"INSERT INTO dbo.DeviceInformation (DeviceID, Temperature, OpenDoorPercentage, Mode) " +
+                                   $"VALUES ('{systemDoorData["DeviceId"]}', {systemDoorData["Temperature"]}, {systemDoorData["OpenDoorPercentage"]}, '{systemDoorData["Mode"]}');";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.ExecuteNonQuery();
+
                     await Task.Yield();
                 }
                 catch (Exception e)
