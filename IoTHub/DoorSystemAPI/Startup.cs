@@ -12,6 +12,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Microsoft.EntityFrameworkCore;
+using DoorSystemAPI.Models;
+using Newtonsoft.Json.Serialization;
+
 namespace DoorSystemAPI
 {
     public class Startup
@@ -26,8 +30,22 @@ namespace DoorSystemAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Enable CORS
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
+
+            //JSON Serializer
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+            options.SerializerSettings.ReferenceLoopHandling= Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddNewtonsoftJson(options=> options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             services.AddControllers();
+            services.AddDbContext<DoorSystemModelContext>(opt =>
+                opt.UseSqlServer("Server=tcp:crhisjairo-iot-database-server.database.windows.net,1433;Initial Catalog=IoTDatabase;Persist Security Info=False;User ID=crhisjairo;Password=Cores2001;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
+
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DoorSystemAPI", Version = "v1" });
@@ -37,6 +55,9 @@ namespace DoorSystemAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //Enable CORS
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
