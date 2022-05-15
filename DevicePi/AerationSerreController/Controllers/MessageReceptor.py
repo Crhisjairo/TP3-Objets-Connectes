@@ -1,5 +1,6 @@
 import threading
 import time
+import json
 from azure.iot.device import IoTHubDeviceClient
 
 class MessageReceptor:
@@ -15,8 +16,14 @@ class MessageReceptor:
         print("Message received:")
 
         # print data from both system and application (custom) properties
-        for property in vars(message).items():
-            print ("    {}".format(property))
+        # for property in vars(message).items():
+        #    print ("    {}".format(property))
+
+        print (vars(message).get('data'))
+        
+        jsonData = json.loads(vars(message).get('data'))
+        print(jsonData)
+        self.set_properties(jsonData)
 
         print("Total calls received: {}".format(self.RECEIVED_MESSAGES))
 
@@ -45,3 +52,6 @@ class MessageReceptor:
             # Graceful exit
             print("Shutting down IoT Hub Client")
             client.shutdown()
+
+    def set_properties(self, properties):
+        pass
