@@ -38,11 +38,33 @@ export class AppComponent implements OnInit{
 
   fetchData(){
     this.doorDataService.getAllData().subscribe((data) => {
-      this.allData = [...data];
+      this.allData = data.value as DoorSystemModel[];
+      console.log(this.allData)
       this.lastData = this.allData[this.allData.length - 1];
-      console.log(data);
+      
       console.log(this.lastData);
     });
+  }
+
+  async sendMessage(mode: string, openDoorPercentage: string = "", action:string = ""){
+    const message = {Mode: mode, OpenDoorPercentage: openDoorPercentage, Action: action };
+    try {     
+      const response = await fetch('https://process-data-function.azurewebsites.net/api/SendMessage?code=aGE7LF4NelxDXsYY_eIbTYmz6acRVGoycc1f1D-cF-CPAzFu-5oIiQ==', {
+        method: 'post',
+        body: JSON.stringify(message),
+      });
+      console.log('Completed!', response);
+    } catch(err) {
+      console.error(`Error: ${err}`);
+    }
+  }
+
+  formatLabel(value: number) {
+    if (value >= 100) {
+      return 'Max';
+    }
+
+    return value;
   }
 }
   

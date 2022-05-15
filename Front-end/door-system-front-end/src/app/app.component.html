@@ -2,10 +2,30 @@
   <h1>Chargement...</h1>
 </div>
 
-<div *ngIf="lastData">
-  <h1>Data</h1>
-  <p>Device Id: {{lastData.DeviceId}}</p>
-  <p>Temperature: {{lastData.Temperature}}</p>
-  <p>OpenDoorPercentage: {{lastData.OpenDoorPercentage}}</p>
-  <p>Mode: {{lastData.Mode}}</p>
+<div class="main-container" *ngIf="lastData">
+  <div class="data">
+    <h1>Data</h1>
+    <p>Device Id: {{lastData.deviceId}}</p>
+    <p>Temperature: {{lastData.temperature}}</p>
+    <p>OpenDoorPercentage: {{lastData.openDoorPercentage}}</p>
+    <p>Mode: {{lastData.mode}}</p>  
+  </div>
+  
+  <div class="actions-container">
+    <button mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('manual')">Contrôle manuelle</button>
+    <button mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('auto')">Contrôle automatique</button>
+    
+    <div class="open-door-percentage">
+      <label>Pourcentage d'ouverture de la porte:</label>
+      <mat-slider
+      class="door-percentage-slider"
+      thumbLabel
+      [displayWith]="formatLabel"
+      tickInterval="1"
+      step="10"
+      min="0"
+      max="100"
+      aria-label="units"></mat-slider>
+    </div>
+  </div>
 </div>

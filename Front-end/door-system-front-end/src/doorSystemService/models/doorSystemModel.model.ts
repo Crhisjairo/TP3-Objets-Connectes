@@ -1,6 +1,6 @@
 export interface DoorSystemModel {
-    DeviceId: string,
-    Temperature: number,
-    OpenDoorPercentage: number,
-    Mode: string,
+    deviceId: string,
+    temperature: number,
+    openDoorPercentage: number,
+    mode: string,
 }
