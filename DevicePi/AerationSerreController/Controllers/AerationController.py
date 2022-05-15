@@ -4,6 +4,7 @@ import time
 from Controllers.SteppMotor import SteppMotor
 from Controllers.Thermometer import Thermometer
 from Controllers.Ultrasonic import Ultrasonic
+from Controllers.MessageReceptor import MessageReceptor
 import Data
 
 import threading
@@ -17,6 +18,7 @@ class AerationController:
         self.stepp_motor = SteppMotor()
         self.thermometer = Thermometer()
         self.ultrasonic = Ultrasonic()
+        self.messageReceptor = MessageReceptor()
         
         self.set_state(state)
         self.start_sensors()
@@ -34,6 +36,7 @@ class AerationController:
         self.stepp_motor.run()
         self.thermometer.run()
         self.ultrasonic.run()
+        self.messageReceptor.run()
         
     def mainloop(self):
         while True:
