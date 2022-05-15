@@ -1,7 +1,11 @@
-<div *ngIf="data">
+<div *ngIf="!lastData">
+  <h1>Chargement...</h1>
+</div>
+
+<div *ngIf="lastData">
   <h1>Data</h1>
-  <p>{{data[0].DeviceId}}</p>
-  <p>{{data[0].Temperature}}</p>
-  <p>{{data[0].OpenDoorPercentage}}</p>
-  <p>{{data[0].Mode}}</p>
+  <p>Device Id: {{lastData.DeviceId}}</p>
+  <p>Temperature: {{lastData.Temperature}}</p>
+  <p>OpenDoorPercentage: {{lastData.OpenDoorPercentage}}</p>
+  <p>Mode: {{lastData.Mode}}</p>
 </div>
