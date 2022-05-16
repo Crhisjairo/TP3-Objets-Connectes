@@ -1,22 +1,36 @@
+<!--Le div suivant est supposé être affiché quand les données sont entrain de charger.
+En raison que j'ai plus des crédits dans Azure, je disable ce div-->
 <div *ngIf="!lastData">
   <h1>Chargement...</h1>
 </div>
 
-<div class="main-container" *ngIf="lastData">
-  <div class="data">
-    <h1>Data</h1>
-    <p>Device Id: {{lastData.deviceId}}</p>
-    <p>Temperature: {{lastData.temperature}}</p>
-    <p>OpenDoorPercentage: {{lastData.openDoorPercentage}}</p>
-    <p>Mode: {{lastData.mode}}</p>  
-  </div>
+<mat-card class="main-container">
+  <mat-card-title class="title">Système d'aération</mat-card-title>
+
+  <div class="center-container">
+    <mat-card class="data-container" *ngIf="lastData">
+       <mat-card-title>Informations</mat-card-title>
+      <div class="data">
+        <p><strong>Device Id:</strong> {{lastData.deviceId}}</p>
+        <p><strong>Temperature:</strong> {{lastData.temperature}} C°</p>
+        <p><strong>Pourcentage d'ouverture de la porte:</strong> {{lastData.openDoorPercentage}}%</p>
+        <p><strong>Mode: </strong> {{lastData.mode}}</p>  
+      </div>
+    </mat-card>
   
-  <div class="actions-container">
-    <button mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('manual')">Contrôle manuelle</button>
-    <button mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('auto')">Contrôle automatique</button>
-    
-    <div class="open-door-percentage">
-      <label>Pourcentage d'ouverture de la porte:</label>
+    <mat-card class="controls-container">
+      <mat-card-title>Commandes</mat-card-title>
+      
+      <button class="ctrl-button" mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('manual')">Contrôle manuelle</button>
+      <button class="ctrl-button" mat-raised-button color="primary" name="manualBtn" (click)="this.sendMessage('auto')">Contrôle automatique</button>
+      
+      <div class="open-door-percentage">
+       
+          <label>Pourcentage d'ouverture de la porte:</label>
+          <input matInput type="number" [(ngModel)]="percentageValue">     
+        
+      </div>
+
       <mat-slider
       class="door-percentage-slider"
       thumbLabel
@@ -25,7 +39,10 @@
       step="10"
       min="0"
       max="100"
+      [(ngModel)]="percentageValue"
       aria-label="units"></mat-slider>
-    </div>
+    </mat-card>
   </div>
-</div>
+  
+
+</mat-card>

@@ -3,6 +3,7 @@ import { DoorSystemService } from 'src/doorSystemService/doorSystemData.service'
 import { DoorSystemModel } from 'src/doorSystemService/models/doorSystemModel.model';
 import { interval } from 'rxjs';
 import { switchMap } from 'rxjs/operators'
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-root',
@@ -13,18 +14,31 @@ export class AppComponent implements OnInit{
   title = 'door-system-front-end';
 
   allData: DoorSystemModel[] | undefined;
-  lastData: DoorSystemModel | undefined;
+
+  percentageValue: number = 0;
+
+  //lastData est supossé contenir les dernieres entrées de la DB.
+  //Pourtant, à cause que j'ai plus accès aux services Azure (À cause du manque du crédit),
+  //les données vont être hardcodés
+  //lastData: DoorSystemModel | undefined;
+  lastData: DoorSystemModel = {
+    deviceId: 'Raspberry Pi Device',
+    temperature: 30,
+    openDoorPercentage: 80,
+    mode: 'auto'
+  };
 
   constructor(
     private doorDataService: DoorSystemService,
-  ){
-    
-  }
+  ){}
   ngOnInit(): void {
     //this.startFetchingData();
     this.fetchData();
   }
 
+  /**
+   * Recupère les données à chaque interval de temps.
+   */
   startFetchingData(){
     interval(5000).pipe(
       switchMap(() => this.doorDataService.getAllData())
@@ -36,6 +50,9 @@ export class AppComponent implements OnInit{
     });;
   }
 
+  /**
+   * Recupère une fois les donneés de la DB.
+   */
   fetchData(){
     this.doorDataService.getAllData().subscribe((data) => {
       this.allData = data.value as DoorSystemModel[];
